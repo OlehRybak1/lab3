@@ -119,8 +119,10 @@ int main() {
                 constexpr auto maxNameBytes = 4 * Subscriber::MAX_NAME_LENGTH;
                 const std::string surname =
                     readLine("Прізвище (до 50 символів): ", maxNameBytes);
+                Subscriber::validateName(surname);
                 const std::string firstName =
                     readLine("Ім'я (до 50 символів): ", maxNameBytes);
+                Subscriber::validateName(firstName);
                 const std::string phone = readLine("Номер телефону (10 цифр): ");
                 book = book + Subscriber(surname, firstName, phone);
                 std::cout << "Абонента додано.\n";

@@ -9,10 +9,12 @@ private:
     std::string phone_;
 
     static void validatePhone(const std::string& phone);
-    static void validateName(const std::string& name);
 
 public:
     static constexpr std::size_t MAX_NAME_LENGTH = 50;
+
+    // Перевірка поля до введення наступного; також використовується конструктором.
+    static void validateName(const std::string& name);
 
     Subscriber(const std::string& surname, const std::string& firstName,
                const std::string& phone);
