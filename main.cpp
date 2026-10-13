@@ -12,10 +12,24 @@
 #include <string>
 #include <vector>
 
-std::string readLine(const std::string& prompt) {
+std::string readLine(const std::string& prompt,
+                     std::size_t maxBytes = std::string::npos) {
     std::cout << prompt;
     std::string text;
-    if (!std::getline(std::cin, text)) {
+    char c = '\0';
+    while (std::cin.get(c)) {
+        if (c == '\n') {
+            return text;
+        }
+        if (text.size() >= maxBytes) {
+            // Прибираємо весь залишок довгого рядка без його збереження.
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            throw InvalidInputException(
+                "Прізвище та ім'я можуть містити не більше 50 символів кожне!");
+        }
+        text += c;
+    }
+    if (text.empty() || !std::cin.eof()) {
         throw InputClosedException();
     }
     return text;
@@ -101,8 +115,12 @@ int main() {
                 break;
 
             case 2: {
-                const std::string surname = readLine("Прізвище: ");
-                const std::string firstName = readLine("Ім'я: ");
+                // Один символ UTF-8 займає до 4 байтів.
+                constexpr auto maxNameBytes = 4 * Subscriber::MAX_NAME_LENGTH;
+                const std::string surname =
+                    readLine("Прізвище (до 50 символів): ", maxNameBytes);
+                const std::string firstName =
+                    readLine("Ім'я (до 50 символів): ", maxNameBytes);
                 const std::string phone = readLine("Номер телефону (10 цифр): ");
                 book = book + Subscriber(surname, firstName, phone);
                 std::cout << "Абонента додано.\n";

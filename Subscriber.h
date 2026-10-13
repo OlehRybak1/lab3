@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>
 #include <string>
 
 class Subscriber {
@@ -8,8 +9,11 @@ private:
     std::string phone_;
 
     static void validatePhone(const std::string& phone);
+    static void validateName(const std::string& name);
 
 public:
+    static constexpr std::size_t MAX_NAME_LENGTH = 50;
+
     Subscriber(const std::string& surname, const std::string& firstName,
                const std::string& phone);
     Subscriber(const Subscriber& other) = default;
